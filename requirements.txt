@@ -1,0 +1,1 @@
+suffixarray.js <https://github.com/tixxit/suffixarray.git>
