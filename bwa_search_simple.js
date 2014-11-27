@@ -18,7 +18,7 @@ function createBWIndex(text){
     var index = new BWIndex();
 
     index.txt = text;
-    index.suffixarray = suffixArray(text);
+    index.suffixarray = suffixArray(text + '!');
 
     // Construct BWT array, C and C_ord
     index.bwtarray = [];
@@ -34,15 +34,13 @@ function createBWIndex(text){
         }
 
         // Construct C and C_ord
-        var f_char = text.substr(index.suffixarray[i], 
-            index.suffixarray[i] + 1);
+        var f_char = text.charAt(index.suffixarray[i]);
 
         // Add to C if there is nothing in it, or
         // if we have reached a new first character in the
         // suffix array.
         if(index.c.length == 0 ||
-            text.substr(index.suffixarray[i-1], 
-                index.suffixarray[i-1]+1) != f_char){
+            text.charAt(index.suffixarray[i-1]) != f_char){
             index.c.push(i);
             index.c_ord['f_char'] = index.c.length - 1;
         }
