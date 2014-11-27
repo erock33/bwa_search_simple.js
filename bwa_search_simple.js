@@ -20,9 +20,33 @@ function createBWIndex(text){
     index.txt = text;
     index.suffixarray = suffixArray(text);
 
+    // Construct BWT array, C and C_ord
     index.bwtarray = [];
     index.c = [];
     index.c_ord = {};
+    for(var i=0; i < index.suffixarray.length; i++){
+
+        // Construct BWT array
+        if(index.suffixarray[i] == 0){
+            index.bwtarray.push(index.suffixarray.length -1);
+        } else {
+            index.bwtarray.push(index.suffixarray[i] - 1);
+        }
+
+        // Construct C and C_ord
+        var f_char = text.substr(index.suffixarray[i], 
+            index.suffixarray[i] + 1);
+
+        // Add to C if there is nothing in it, or
+        // if we have reached a new first character in the
+        // suffix array.
+        if(index.c.length == 0 ||
+            text.substr(index.suffixarray[i-1], 
+                index.suffixarray[i-1]+1) != f_char){
+            index.c.push(i);
+            index.c_ord['f_char'] = index.c.length - 1;
+        }
+    }
 }
 
 /**
