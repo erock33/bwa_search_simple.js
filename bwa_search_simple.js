@@ -21,33 +21,27 @@ function createBWIndex(text){
     index.suffixarray = suffixArray(index.txt);
 
     // Construct BWT array, C and C_ord
-    index.bwtarray = [];
+    index.bwtarray = index.suffixarray.slice(0);
     index.c = [];
     index.c_ord = {};
     index.ranks = [];
-    for(var i=0; i < index.suffixarray.length; i++){
-
-        // Construct BWT array
-        if(index.suffixarray[i] == 0){
-            index.bwtarray.push(index.suffixarray.length -1);
-        } else {
-            index.bwtarray.push(index.suffixarray[i] - 1);
-        }
+    for(var i=0; i < index.bwtarray.length; i++){
 
         // Construct C and C_ord
-        var f_char = index.txt.charAt(index.suffixarray[i]);
+        var f_char = index.txt.charAt(index.bwtarray[i]);
 
         // Add to C if there is nothing in it, or
         // if we have reached a new first character in the
         // suffix array.
         if(index.c.length == 0 ||
-            index.txt.charAt(index.suffixarray[i-1]) != f_char){
+            index.txt.charAt(index.bwtarray[i-1]) != f_char){
             index.c.push(i);
             index.c_ord[f_char] = index.c.length - 1;
         }
 
-        var l_char = index.txt.charAt(index.bwtarray[
-            index.bwtarray.length - 1]);
+        var l_char = (index.bwtarray[i] == 0) ?
+            index.txt.charAt(index.txt.length - 1) : 
+            index.txt.charAt(index.bwtarray[i]-1);
         var rank = {};
         if( i > 0 ){
             rank = Object.create(
@@ -85,21 +79,21 @@ function findLocations(index, str){
     var chr_ord = index.c_ord[chr];
     start = index.c[chr_ord];
     end = (chr_ord == index.c.length - 1) ?
-        index.bwtarray.length-1 : index.c[ chr_ord+1 ];
+        index.bwtarray.length-1 : index.c[ chr_ord+1 ] -1;
 
     for(var i=0; i < str.length -1; i++){
         var next_chr = str.substring(str.length-i-2, 
             str.length-i-1);
         rank_start = (isNaN(index.ranks[start][next_chr])) ? 
-            1 : index.ranks[start][next_chr];
+            0 : index.ranks[start][next_chr];
 
         rank_end = (isNaN(index.ranks[end][next_chr])) ?
-            1 : index.ranks[end][next_chr];
+            0 : index.ranks[end][next_chr];
 
         start = index.c[index.c_ord[next_chr]] + 
-            rank_start - 1;
+            rank_start;
         end = index.c[ index.c_ord[next_chr]] +
-            rank_end - 1;
+            rank_end -1;
     }
     return [start, end];
 }
