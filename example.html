@@ -4,5 +4,39 @@
     <script type="text/javascript" src="./bwa_search_simple.js"></script>
 </head>
 <body>
+    <div>
+        <textarea rows="20" cols="50" id="ref_text"></textarea>
+    </div>
+    <div>
+        <button onclick="index_text()" >Index Text</button>
+    </div>
+    <br>
+    <div>
+        <input type="text" id="search_text" >
+    </div>
+    <div>
+        <button onclick="search_index()">Search</button>
+    </div>
+    <script type="text/javascript">
+        var ind = null;
+        var locations = null;
+        function index_text(){
+            var r = document.getElementById('ref_text');
+            ind = createBWIndex(r.value);
+            console.log(ind);
+        }
+        
+        function search_index(){
+            var s = document.getElementById('search_text');
+            var txt = s.value;
+            locations = findLocations(ind, txt);
+            console.log(locations);
+            for(var i=locations[0]; i <= locations[1]; i++){
+                console.log(
+                    ind.txt.slice(ind.suffixarray[i]));
+            }
+            
+        }
+    </script>
 </body>
 </html>
