@@ -42,6 +42,7 @@ function createBWIndex(text){
         var l_char = (index.bwtarray[i] == 0) ?
             index.txt.charAt(index.txt.length - 1) : 
             index.txt.charAt(index.bwtarray[i]-1);
+        
         var rank = {};
         if( i > 0 ){
             rank = Object.create(
@@ -77,23 +78,23 @@ function findLocations(index, str){
 
     var chr = str.substring(str.length - 1, str.length);
     var chr_ord = index.c_ord[chr];
-    start = index.c[chr_ord];
+    start = index.c[chr_ord] + 1;
     end = (chr_ord == index.c.length - 1) ?
-        index.bwtarray.length-1 : index.c[ chr_ord+1 ] -1;
+        index.bwtarray.length : index.c[ chr_ord+1 ];
 
     for(var i=0; i < str.length -1; i++){
         var next_chr = str.substring(str.length-i-2, 
             str.length-i-1);
-        rank_start = (isNaN(index.ranks[start][next_chr])) ? 
-            0 : index.ranks[start][next_chr];
+        rank_start = (isNaN(index.ranks[start-2][next_chr])) ? 
+            0 : index.ranks[start-2][next_chr];
 
-        rank_end = (isNaN(index.ranks[end][next_chr])) ?
-            0 : index.ranks[end][next_chr];
+        rank_end = (isNaN(index.ranks[end-1][next_chr])) ?
+            0 : index.ranks[end-1q][next_chr];
 
-        start = index.c[index.c_ord[next_chr]] + 
-            rank_start;
-        end = index.c[ index.c_ord[next_chr]] +
-            rank_end -1;
+        start = index.c[ index.c_ord[next_chr] ] + 
+            rank_start + 1;
+        end = index.c[ index.c_ord[next_chr] ] +
+            rank_end;
     }
-    return [start, end];
+    return [start-1, end-1];
 }
