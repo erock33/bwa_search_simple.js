@@ -89,7 +89,7 @@ function findLocations(index, str){
             0 : index.ranks[start-2][next_chr];
 
         rank_end = (isNaN(index.ranks[end-1][next_chr])) ?
-            0 : index.ranks[end-1q][next_chr];
+            0 : index.ranks[end-1][next_chr];
 
         start = index.c[ index.c_ord[next_chr] ] + 
             rank_start + 1;
